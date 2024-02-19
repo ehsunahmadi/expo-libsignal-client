@@ -1,36 +1,42 @@
-import {
-	EventEmitter,
-	NativeModulesProxy,
-	Subscription,
-} from 'expo-modules-core';
-
-// Import the native module. On web, it will be resolved to ExpoLibsignalClient.web.ts
-// and on native platforms to ExpoLibsignalClient.ts
-import {
-	ChangeEventPayload,
-	ExpoLibsignalClientViewProps,
-} from './ExpoLibsignalClient.types';
 import ExpoLibsignalClientModule from './ExpoLibsignalClientModule';
+import Native from './Native';
+export class PrivateKey {
+	readonly _nativeHandle: Native.PrivateKey;
 
-// Get the native constant value.
-export const PI = ExpoLibsignalClientModule.PI;
+	private constructor(handle: Native.PrivateKey) {
+		this._nativeHandle = handle;
+	}
 
-export function hello(): string {
-	return ExpoLibsignalClientModule.hello();
+	static _fromNativeHandle(handle: Native.PrivateKey): PrivateKey {
+		return new PrivateKey(handle);
+	}
+
+	static generate(): PrivateKey {
+		return new PrivateKey(ExpoLibsignalClientModule.PrivateKey_Generate());
+	}
+
+	static deserialize(buf: Uint8Array): PrivateKey {
+		return new PrivateKey(
+			ExpoLibsignalClientModule.PrivateKey_Deserialize(buf)
+		);
+	}
+
+	serialize(): Uint8Array {
+		return ExpoLibsignalClientModule.PrivateKey_Serialize(this._nativeHandle);
+	}
+
+	// sign(msg: Buffer): Buffer {
+	// 	return ExpoLibsignalClientModule.PrivateKey_Sign(this, msg);
+	// }
+
+	// agree(other_key: PublicKey): Buffer {
+	//   return Native.PrivateKey_Agree(this, other_key);
+	// }
+
+	// getPublicKey(): PublicKey {
+	//   return PublicKey._fromNativeHandle(Native.PrivateKey_GetPublicKey(this));
+	// }
 }
 
-export async function setValueAsync(value: string) {
-	return await ExpoLibsignalClientModule.setValueAsync(value);
-}
-
-const emitter = new EventEmitter(
-	ExpoLibsignalClientModule ?? NativeModulesProxy.ExpoLibsignalClient
-);
-
-export function addChangeListener(
-	listener: (event: ChangeEventPayload) => void
-): Subscription {
-	return emitter.addListener<ChangeEventPayload>('onChange', listener);
-}
-
-export { ChangeEventPayload, ExpoLibsignalClientViewProps };
+//export the types here
+// export {};

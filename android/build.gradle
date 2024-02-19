@@ -89,4 +89,6 @@ repositories {
 dependencies {
   implementation project(':expo-modules-core')
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${getKotlinVersion()}"
+  implementation("org.signal:libsignal-client:0.39.3")
+  implementation("org.signal:libsignal-android:0.39.3")
 }
