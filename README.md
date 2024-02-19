@@ -4,8 +4,7 @@ libsignal client as an expo native module
 
 # API documentation
 
-- [Documentation for the main branch](https://github.com/expo/expo/blob/main/docs/pages/versions/unversioned/sdk/libsignal-client.md)
-- [Documentation for the latest stable release](https://docs.expo.dev/versions/latest/sdk/libsignal-client/)
+- [this package is exposing the same libsignal api](https://github.com/signalapp/libsignal)
 
 # Installation in managed Expo projects
 
@@ -24,12 +23,3 @@ npm install expo-libsignal-client
 ### Configure for iOS
 
 Run `npx pod-install` after installing the npm package.
-
-
-### Configure for Android
-
-
-
-# Contributing
-
-Contributions are very welcome! Please refer to guidelines described in the [contributing guide]( https://github.com/expo/expo#contributing).
