@@ -496,7 +496,7 @@ export class KyberPreKeyRecord {
 			ExpoLibsignalClientModule.KyberPreKeyRecord_New(
 				id,
 				timestamp,
-				keyPair,
+				keyPair._nativeHandle,
 				signature
 			)
 		);
