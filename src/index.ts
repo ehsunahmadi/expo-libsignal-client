@@ -1,3 +1,4 @@
+import { Buffer } from '@craftzdog/react-native-buffer';
 import ExpoLibsignalClientModule from './ExpoLibsignalClientModule';
 import Native from './Native';
 
@@ -14,20 +15,20 @@ export class HKDF {
 
 	deriveSecrets(
 		outputLength: number,
-		keyMaterial: Uint8Array,
-		label: Uint8Array,
-		salt: Uint8Array | null
-	): Uint8Array {
+		keyMaterial: Buffer,
+		label: Buffer,
+		salt: Buffer | null
+	): Buffer {
 		return hkdf(outputLength, keyMaterial, label, salt);
 	}
 }
 
 export function hkdf(
 	outputLength: number,
-	keyMaterial: Uint8Array,
-	label: Uint8Array,
-	salt: Uint8Array | null
-): Uint8Array {
+	keyMaterial: Buffer,
+	label: Buffer,
+	salt: Buffer | null
+): Buffer {
 	return ExpoLibsignalClientModule.HKDF_DeriveSecrets(
 		outputLength,
 		keyMaterial,
@@ -50,21 +51,21 @@ export class PrivateKey {
 		return new PrivateKey(ExpoLibsignalClientModule.PrivateKey_Generate());
 	}
 
-	static deserialize(buf: Uint8Array): PrivateKey {
+	static deserialize(buf: Buffer): PrivateKey {
 		return new PrivateKey(
 			ExpoLibsignalClientModule.PrivateKey_Deserialize(buf)
 		);
 	}
 
-	serialize(): Uint8Array {
+	serialize(): Buffer {
 		return ExpoLibsignalClientModule.PrivateKey_Serialize(this._nativeHandle);
 	}
 
-	sign(msg: Uint8Array): Uint8Array {
+	sign(msg: Buffer): Buffer {
 		return ExpoLibsignalClientModule.PrivateKey_Sign(this._nativeHandle, msg);
 	}
 
-	agree(other_key: PublicKey): Uint8Array {
+	agree(other_key: PublicKey): Buffer {
 		return ExpoLibsignalClientModule.PrivateKey_Agree(
 			this._nativeHandle,
 			other_key
@@ -89,7 +90,7 @@ export class PublicKey {
 		return new PublicKey(handle);
 	}
 
-	static deserialize(buf: Uint8Array): PublicKey {
+	static deserialize(buf: Buffer): PublicKey {
 		return new PublicKey(ExpoLibsignalClientModule.PublicKey_Deserialize(buf));
 	}
 
@@ -101,17 +102,17 @@ export class PublicKey {
 		);
 	}
 
-	serialize(): Uint8Array {
+	serialize(): Buffer {
 		return ExpoLibsignalClientModule.PublicKey_Serialize(this._nativeHandle);
 	}
 
-	getPublicKeyBytes(): Uint8Array {
+	getPublicKeyBytes(): Buffer {
 		return ExpoLibsignalClientModule.PublicKey_GetPublicKeyBytes(
 			this._nativeHandle
 		);
 	}
 
-	verify(msg: Uint8Array, sig: Uint8Array): boolean {
+	verify(msg: Buffer, sig: Buffer): boolean {
 		return ExpoLibsignalClientModule.PublicKey_Verify(
 			this._nativeHandle,
 			msg,
@@ -119,7 +120,7 @@ export class PublicKey {
 		);
 	}
 
-	verifyAlternateIdentity(other: PublicKey, signature: Uint8Array): boolean {
+	verifyAlternateIdentity(other: PublicKey, signature: Buffer): boolean {
 		return ExpoLibsignalClientModule.IdentityKey_VerifyAlternateIdentity(
 			this._nativeHandle,
 			other,
@@ -139,13 +140,13 @@ export class KEMPublicKey {
 		return new KEMPublicKey(handle);
 	}
 
-	static deserialize(buf: Uint8Array): KEMPublicKey {
+	static deserialize(buf: Buffer): KEMPublicKey {
 		return new KEMPublicKey(
 			ExpoLibsignalClientModule.KyberPublicKey_Deserialize(buf)
 		);
 	}
 
-	serialize(): Uint8Array {
+	serialize(): Buffer {
 		return ExpoLibsignalClientModule.KyberPublicKey_Serialize(
 			this._nativeHandle
 		);
@@ -163,13 +164,13 @@ export class KEMSecretKey {
 		return new KEMSecretKey(handle);
 	}
 
-	static deserialize(buf: Uint8Array): KEMSecretKey {
+	static deserialize(buf: Buffer): KEMSecretKey {
 		return new KEMSecretKey(
 			ExpoLibsignalClientModule.KyberSecretKey_Deserialize(buf)
 		);
 	}
 
-	serialize(): Uint8Array {
+	serialize(): Buffer {
 		return ExpoLibsignalClientModule.KyberSecretKey_Serialize(
 			this._nativeHandle
 		);
@@ -218,7 +219,7 @@ export class IdentityKeyPair {
 		return new IdentityKeyPair(privateKey.getPublicKey(), privateKey);
 	}
 
-	static deserialize(buffer: Uint8Array): IdentityKeyPair {
+	static deserialize(buffer: Buffer): IdentityKeyPair {
 		const keys = ExpoLibsignalClientModule.IdentityKeyPair_Deserialize(buffer);
 		console.log({ keys });
 		return new IdentityKeyPair(
@@ -227,14 +228,14 @@ export class IdentityKeyPair {
 		);
 	}
 
-	serialize(): Uint8Array {
+	serialize(): Buffer {
 		return ExpoLibsignalClientModule.IdentityKeyPair_Serialize(
 			this.publicKey,
 			this.privateKey
 		);
 	}
 
-	signAlternateIdentity(other: PublicKey): Uint8Array {
+	signAlternateIdentity(other: PublicKey): Buffer {
 		return ExpoLibsignalClientModule.IdentityKeyPair_SignAlternateIdentity(
 			this.publicKey,
 			this.privateKey,
@@ -258,11 +259,11 @@ export class PreKeyBundle {
 		prekey: PublicKey,
 		signed_prekey_id: number,
 		signed_prekey: PublicKey,
-		signed_prekey_signature: Uint8Array,
+		signed_prekey_signature: Buffer,
 		identity_key: PublicKey,
 		kyber_prekey_id?: number,
 		kyber_prekey?: KEMPublicKey,
-		kyber_prekey_signature?: Uint8Array
+		kyber_prekey_signature?: Buffer
 	): PreKeyBundle {
 		return new PreKeyBundle(
 			ExpoLibsignalClientModule.PreKeyBundle_New(
@@ -275,7 +276,7 @@ export class PreKeyBundle {
 				kyber_prekey_id ?? null,
 				[
 					kyber_prekey?._nativeHandle ?? null,
-					kyber_prekey_signature ?? new Uint8Array(0),
+					kyber_prekey_signature ?? new Buffer(0),
 				]
 			)
 		);
@@ -323,7 +324,7 @@ export class PreKeyBundle {
 			)
 		);
 	}
-	signedPreKeySignature(): Uint8Array {
+	signedPreKeySignature(): Buffer {
 		return ExpoLibsignalClientModule.PreKeyBundle_GetSignedPreKeySignature(
 			this
 		);
@@ -342,7 +343,7 @@ export class PreKeyBundle {
 		return handle == null ? null : KEMPublicKey._fromNativeHandle(handle);
 	}
 
-	kyberPreKeySignature(): Uint8Array | null {
+	kyberPreKeySignature(): Buffer | null {
 		const buf = ExpoLibsignalClientModule.PreKeyBundle_GetKyberPreKeySignature(
 			this._nativeHandle
 		);
@@ -367,7 +368,7 @@ export class PreKeyRecord {
 		);
 	}
 
-	static deserialize(buffer: Uint8Array): PreKeyRecord {
+	static deserialize(buffer: Buffer): PreKeyRecord {
 		return new PreKeyRecord(
 			ExpoLibsignalClientModule.PreKeyRecord_Deserialize(buffer)
 		);
@@ -389,7 +390,7 @@ export class PreKeyRecord {
 		);
 	}
 
-	serialize(): Uint8Array {
+	serialize(): Buffer {
 		return ExpoLibsignalClientModule.PreKeyRecord_Serialize(this._nativeHandle);
 	}
 }
@@ -412,7 +413,7 @@ export class SignedPreKeyRecord {
 		timestamp: number,
 		pubKey: PublicKey,
 		privKey: PrivateKey,
-		signature: Uint8Array
+		signature: Buffer
 	): SignedPreKeyRecord {
 		return new SignedPreKeyRecord(
 			ExpoLibsignalClientModule.SignedPreKeyRecord_New(
@@ -425,7 +426,7 @@ export class SignedPreKeyRecord {
 		);
 	}
 
-	static deserialize(buffer: Uint8Array): SignedPreKeyRecord {
+	static deserialize(buffer: Buffer): SignedPreKeyRecord {
 		return new SignedPreKeyRecord(
 			ExpoLibsignalClientModule.SignedPreKeyRecord_Deserialize(buffer)
 		);
@@ -453,13 +454,13 @@ export class SignedPreKeyRecord {
 		);
 	}
 
-	serialize(): Uint8Array {
+	serialize(): Buffer {
 		return ExpoLibsignalClientModule.SignedPreKeyRecord_Serialize(
 			this._nativeHandle
 		);
 	}
 
-	signature(): Uint8Array {
+	signature(): Buffer {
 		return ExpoLibsignalClientModule.SignedPreKeyRecord_GetSignature(
 			this._nativeHandle
 		);
@@ -489,7 +490,7 @@ export class KyberPreKeyRecord {
 		id: number,
 		timestamp: number,
 		keyPair: KEMKeyPair,
-		signature: Uint8Array
+		signature: Buffer
 	): KyberPreKeyRecord {
 		return new KyberPreKeyRecord(
 			ExpoLibsignalClientModule.KyberPreKeyRecord_New(
@@ -501,13 +502,13 @@ export class KyberPreKeyRecord {
 		);
 	}
 
-	serialize(): Uint8Array {
+	serialize(): Buffer {
 		return ExpoLibsignalClientModule.KyberPreKeyRecord_Serialize(
 			this._nativeHandle
 		);
 	}
 
-	static deserialize(buffer: Uint8Array): KyberPreKeyRecord {
+	static deserialize(buffer: Buffer): KyberPreKeyRecord {
 		return new KyberPreKeyRecord(
 			ExpoLibsignalClientModule.KyberPreKeyRecord_Deserialize(buffer)
 		);
@@ -541,7 +542,7 @@ export class KyberPreKeyRecord {
 		);
 	}
 
-	signature(): Uint8Array {
+	signature(): Buffer {
 		return ExpoLibsignalClientModule.KyberPreKeyRecord_GetSignature(
 			this._nativeHandle
 		);
