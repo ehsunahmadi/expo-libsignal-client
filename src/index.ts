@@ -555,5 +555,88 @@ export class KyberPreKeyRecord {
 	}
 }
 
+export class SenderKeyRecord {
+	readonly _nativeHandle: Native.SenderKeyRecord;
+
+	static _fromNativeHandle(
+		nativeHandle: Native.SenderKeyRecord
+	): SenderKeyRecord {
+		return new SenderKeyRecord(nativeHandle);
+	}
+
+	private constructor(nativeHandle: Native.SenderKeyRecord) {
+		this._nativeHandle = nativeHandle;
+	}
+
+	static deserialize(buffer: Buffer): SenderKeyRecord {
+		return new SenderKeyRecord(Native.SenderKeyRecord_Deserialize(buffer));
+	}
+
+	serialize(): Buffer {
+		return ExpoLibsignalClientModule.SenderKeyRecord_Serialize(
+			this._nativeHandle
+		);
+	}
+}
+
+export class SessionRecord {
+	readonly _nativeHandle: Native.SessionRecord;
+
+	private constructor(nativeHandle: Native.SessionRecord) {
+		this._nativeHandle = nativeHandle;
+	}
+
+	static _fromNativeHandle(nativeHandle: Native.SessionRecord): SessionRecord {
+		return new SessionRecord(nativeHandle);
+	}
+
+	static deserialize(buffer: Buffer): SessionRecord {
+		return new SessionRecord(Native.SessionRecord_Deserialize(buffer));
+	}
+
+	serialize(): Buffer {
+		return ExpoLibsignalClientModule.SessionRecord_Serialize(
+			this._nativeHandle
+		);
+	}
+
+	archiveCurrentState(): void {
+		ExpoLibsignalClientModule.SessionRecord_ArchiveCurrentState(
+			this._nativeHandle
+		);
+	}
+
+	localRegistrationId(): number {
+		return ExpoLibsignalClientModule.SessionRecord_GetLocalRegistrationId(
+			this._nativeHandle
+		);
+	}
+
+	remoteRegistrationId(): number {
+		return ExpoLibsignalClientModule.SessionRecord_GetRemoteRegistrationId(
+			this._nativeHandle
+		);
+	}
+
+	/**
+	 * Returns whether the current session can be used to send messages.
+	 *
+	 * If there is no current session, returns false.
+	 */
+	hasCurrentState(now: Date = new Date()): boolean {
+		return ExpoLibsignalClientModule.SessionRecord_HasUsableSenderChain(
+			this._nativeHandle,
+			now.getTime()
+		);
+	}
+
+	currentRatchetKeyMatches(key: PublicKey): boolean {
+		return ExpoLibsignalClientModule.SessionRecord_CurrentRatchetKeyMatches(
+			this._nativeHandle,
+			key._nativeHandle
+		);
+	}
+}
+
 //export the types here
 // export {};

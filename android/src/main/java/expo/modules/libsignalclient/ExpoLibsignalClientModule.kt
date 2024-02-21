@@ -76,6 +76,15 @@ class ExpoLibsignalClientModule : Module() {
     Function("KyberPreKeyRecord_GetSecretKey", this@ExpoLibsignalClientModule::KyberPreKeyRecord_GetSecretKey)
     Function("KyberPreKeyRecord_GetSignature", this@ExpoLibsignalClientModule::KyberPreKeyRecord_GetSignature)
     Function("KyberPreKeyRecord_GetTimestamp", this@ExpoLibsignalClientModule::KyberPreKeyRecord_GetTimestamp)
+
+    Function("SenderKeyRecord_Serialize", this@ExpoLibsignalClientModule::SenderKeyRecord_Serialize)
+
+    Function("SessionRecord_Serialize", this@ExpoLibsignalClientModule::SessionRecord_Serialize)
+    Function("SessionRecord_ArchiveCurrentState", this@ExpoLibsignalClientModule::SessionRecord_ArchiveCurrentState)
+    Function("SessionRecord_GetLocalRegistrationId", this@ExpoLibsignalClientModule::SessionRecord_GetLocalRegistrationId)
+    Function("SessionRecord_GetRemoteRegistrationId", this@ExpoLibsignalClientModule::SessionRecord_GetRemoteRegistrationId)
+    Function("SessionRecord_HasUsableSenderChain", this@ExpoLibsignalClientModule::SessionRecord_HasUsableSenderChain) 
+    Function("SessionRecord_CurrentRatchetKeyMatches", this@ExpoLibsignalClientModule::SessionRecord_CurrentRatchetKeyMatches)
   }
   
   private fun HKDF_DeriveSecrets(outputLength: Int, ikm: ByteArray, label: ByteArray?, salt: ByteArray?) : ByteArray {
@@ -287,5 +296,28 @@ class ExpoLibsignalClientModule : Module() {
   }
   private fun KyberPreKeyRecord_GetTimestamp(kyberPreKeyRecord: Long) : Long {
     return Native.KyberPreKeyRecord_GetTimestamp(kyberPreKeyRecord)
+  }
+
+  private fun SenderKeyRecord_Serialize(senderKeyRecord: Long) : ByteArray {
+    return Native.SenderKeyRecord_GetSerialized(senderKeyRecord)
+  }
+
+  private fun SessionRecord_Serialize(sessionRecord: Long) : ByteArray {
+    return Native.SessionRecord_GetSerialized(sessionRecord)
+  }
+  private fun SessionRecord_ArchiveCurrentState(sessionRecord: Long) : ByteArray {
+    return Native.SessionRecord_ArchiveCurrentState(sessionRecord)
+  }
+  private fun SessionRecord_GetLocalRegistrationId(sessionRecord: Long) : Int {
+    return Native.SessionRecord_GetLocalRegistrationId(sessionRecord)
+  }
+  private fun SessionRecord_GetRemoteRegistrationId(sessionRecord: Long) : Int {
+    return Native.SessionRecord_GetRemoteRegistrationId(sessionRecord)
+  }
+  private fun SessionRecord_HasUsableSenderChain(sessionRecord: Long) : Boolean {
+    return Native.SessionRecord_HasUsableSenderChain(sessionRecord)
+  }
+  private fun SessionRecord_CurrentRatchetKeyMatches(sessionRecord: Long, publicKey: Long) : Boolean {
+    return Native.SessionRecord_CurrentRatchetKeyMatches(sessionRecord, publicKey)
   }
 }
