@@ -1,6 +1,6 @@
 import { Buffer } from '@craftzdog/react-native-buffer';
 import ExpoLibsignalClientModule from './ExpoLibsignalClientModule';
-import * as Native from './Native';
+import * as Native from './Native.d';
 
 export class HKDF {
 	/**

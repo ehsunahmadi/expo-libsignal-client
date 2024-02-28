@@ -1,6 +1,6 @@
 {
 	"name": "expo-libsignal-client",
-	"version": "0.1.8",
+	"version": "0.1.9",
 	"description": "libsignal client as an expo native module",
 	"main": "build/index.js",
 	"types": "build/index.d.ts",
@@ -42,5 +42,8 @@
 		"expo": "*",
 		"react": "*",
 		"react-native": "*"
+	},
+	"dependencies": {
+		"@craftzdog/react-native-buffer": "^6.0.5"
 	}
 }
