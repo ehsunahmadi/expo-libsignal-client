@@ -303,9 +303,9 @@ class ExpoLibsignalClientModule : Module() {
   }
 
   private fun SessionRecord_Serialize(sessionRecord: Long) : ByteArray {
-    return Native.SessionRecord_GetSerialized(sessionRecord)
+    return Native.SessionRecord_Serialize(sessionRecord)
   }
-  private fun SessionRecord_ArchiveCurrentState(sessionRecord: Long) : ByteArray {
+  private fun SessionRecord_ArchiveCurrentState(sessionRecord: Long) {
     return Native.SessionRecord_ArchiveCurrentState(sessionRecord)
   }
   private fun SessionRecord_GetLocalRegistrationId(sessionRecord: Long) : Int {
@@ -314,8 +314,8 @@ class ExpoLibsignalClientModule : Module() {
   private fun SessionRecord_GetRemoteRegistrationId(sessionRecord: Long) : Int {
     return Native.SessionRecord_GetRemoteRegistrationId(sessionRecord)
   }
-  private fun SessionRecord_HasUsableSenderChain(sessionRecord: Long) : Boolean {
-    return Native.SessionRecord_HasUsableSenderChain(sessionRecord)
+  private fun SessionRecord_HasUsableSenderChain(sessionRecord: Long, now: Long) : Boolean {
+    return Native.SessionRecord_HasUsableSenderChain(sessionRecord, now)
   }
   private fun SessionRecord_CurrentRatchetKeyMatches(sessionRecord: Long, publicKey: Long) : Boolean {
     return Native.SessionRecord_CurrentRatchetKeyMatches(sessionRecord, publicKey)

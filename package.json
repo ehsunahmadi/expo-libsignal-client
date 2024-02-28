@@ -1,6 +1,6 @@
 {
 	"name": "expo-libsignal-client",
-	"version": "0.1.6",
+	"version": "0.1.7",
 	"description": "libsignal client as an expo native module",
 	"main": "build/index.js",
 	"types": "build/index.d.ts",
